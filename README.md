@@ -1,9 +1,9 @@
 # CTF-1
-Capture the flag donde se trabaja la enumeración y fingerprinting, conexión FTP, php, reverse shell, netcat, escalada de privilegios... 
+*Capture the flag* donde se trabaja la enumeración y fingerprinting, conexión FTP, php, *reverse shell*, *netcat*, escalada de privilegios... 
 
 ## Objetivo
 
-Explicar la realización del _Capture the flag_ siguiente dentro del mundo educativo. Se preteneden conseguir dos archivos (_flags_), uno dentro del entorno del usuario básico y el otro en el entorno _root_. Para ello, se deberá penetrar en la máquina, pasar al usuario básico y realizar una escalada de privilegios.
+Explicar la realización del siguiente _Capture the flag_ dentro del mundo educativo. Se preteneden conseguir dos archivos (_flags_), uno dentro del entorno del usuario básico y el otro en el entorno _root_. Para ello, se deberá penetrar en la máquina, pasar al usuario básico y realizar una escalada de privilegios.
 
 ## Que hemos aprendido?
 
@@ -14,39 +14,39 @@ Explicar la realización del _Capture the flag_ siguiente dentro del mundo educa
 
 ## Herramientas utilizadas
 
-- Kali Linux.
-- Enumeración: nmap, WFUZZ.
-- Penetración: código php de 'Pentest Monkey', netcat, lenguaje bash, web 'exploit-database'. 
+- *Kali Linux*.
+- Enumeración: *nmap*, *WFUZZ*.
+- Penetración: código php de *Pentest Monkey*, *netcat*, lenguaje *bash*, *web 'exploit-database'*. 
 
 ## Steps
 
 ### Enumeración y fingerprinting
 
-La máquina a vulnerar está desplegada dentro de un Docker, para encontrar este, desde el terminal de Kali, se busca su direción IP con el comando <code>ipconfig</code>. En la respuesta se averigua que su dirección IP es la 172.17.0.1, por lo que la máquina víctima debe estar en la red 172.17.0.X. Utilizando la herramienta __nmap__ puedo hacer un barrido para encontrar el host que estoy buscando, para hacerlo más rápido no compruebo puertos.  
+La máquina a vulnerar está desplegada dentro de un *Docker*, para encontrar este desde el terminal de Kali, se busca su direción IP con el comando <code>ipconfig</code>. En la respuesta se averigua que su dirección IP es la 172.17.0.1, por lo que la máquina víctima debe estar en la red 172.17.0.X. Utilizando la herramienta __nmap__ puedo hacer un barrido para encontrar el host que estoy buscando, para hacerlo más rápido no compruebo puertos.  
 
 <code>nmap -sn 172.17.0/24</code>  
 
 ![427138515-a9e766f5-48f7-4510-8ca1-05af72817794](https://github.com/user-attachments/assets/383ace90-df56-4fbd-b715-5f5f726caf92)
 
-Ya tengo localizada la máquina en la dirección 172.17.0.2, ahora con la ayuda de __nmap__ se buscan los puertos de la máquina que se encuentran abiertos y las versiones que corren en ellos. Le indico que no haga descubrimiento de hosts mediante ‘-Pn’. Además, utilizo el script ‘default’ que viene con nmap para que me muestre las vulnerabilidades que pueda encontrar.  
+Ya tengo localizada la máquina en la dirección 172.17.0.2, ahora con la ayuda de __nmap__ se buscan los puertos de la máquina que se encuentran abiertos y las versiones que corren en ellos. Le indico que no haga descubrimiento de *hosts* mediante ‘-Pn’. Además, utilizo el script *default* que viene con *nmap* para que me muestre las vulnerabilidades que pueda encontrar.  
 
 <code>nmap -p- -Pn -sV -O 172.17.0.2 -sC</code>  
 
 ![427141463-8c876a8a-464d-48a5-9298-e522cc7764ee](https://github.com/user-attachments/assets/4621faeb-9571-4a84-a347-830406e729f3)
 
 El comando nos devuelve 3 puertos TCPs abiertos:
-- En el puerto 21 corre la versión vsftpd 3.0.3 del servicio FTP.
-- En el puerto 22 corre la versión Openssh 7.6p1 del servicio SSH en un sistema Ubuntu.
-- En el puerto 80 corre la versión Apache httpd 2.4.29 del servicio HTTP en un sistema Ubuntu.
+- En el puerto 21 corre la versión *vsftpd* 3.0.3 del servicio FTP.
+- En el puerto 22 corre la versión *Openssh* 7.6p1 del servicio SSH en un sistema *Ubuntu*.
+- En el puerto 80 corre la versión *Apache* httpd 2.4.29 del servicio HTTP en un sistema *Ubuntu*.
 
-Los scripts muestran una serie de vulnerabilidades entre la que destaca el hecho de poder iniciar sesión vía FTP con una cuenta ‘anonymous’, por lo que no será necesaria una contraseña. Una vez dentro, encuentro el directorio ‘html’ y dentro de este, dos archivos: ‘index.php’ e ‘index.html.bak’. Estos archivos hacen referencia al servidor de Apache que hay montado en el puerto 80. Puesto que tengo acceso a esta carpeta y permisos de escritura, subiré un archivo ‘php’ con una reverse shell para poder tomar el control de la máquina.  
-Para la enumeración web se utiliza la herramiente __WFUZZ__ que econtrará los posibles archivos y directorios que pertenezcan a la IP. Con la opción ‘-c’ se muestran los valores con diferentes colores, con ‘-hc 404’ evito que salgan por pantalla todos aquellos intentos que no han encontrado nada. El parámetro ‘-t’ sirve para indicar la velocidad que ejecuta el comando, he decidido ponerle 1 para que analice todos los posibles ficheros con el inconveniente de tardar más. El parámetro ‘-w’ indica la lista a partir de la cual se va a hacer el fuzzing y el parámetro ‘-u’ es para la URL de la página destino. Añadiendo la palabra FUZZ al final, indico que la palabra de la lista que analiza, la busque en esa posición de la url.  
+Los *scripts* muestran una serie de vulnerabilidades entre la que destaca la posibilidad de iniciar sesión vía FTP con una cuenta *anonymous*, por lo que no sería necesaria una contraseña. Una vez dentro, encuentro el directorio ‘html’ y dentro de este, dos archivos: ‘index.php’ e ‘index.html.bak’. Estos archivos hacen referencia al servidor de *Apache* que hay montado en el puerto 80. Puesto que tengo acceso a esta carpeta y permisos de escritura, subiré un archivo *php* con una *reverse shell* para poder tomar el control de la máquina.  
+Para la enumeración web se utiliza la herramiente __WFUZZ__ que encontrará los posibles archivos y directorios que pertenezcan a la IP. Con la opción ‘-c’ se muestran los valores con diferentes colores, con ‘-hc 404’ evito que salgan por pantalla todos aquellos intentos que no han encontrado nada. El parámetro ‘-t’ sirve para indicar la velocidad que ejecuta el comando, he decidido ponerle 1 para que analice todos los posibles ficheros con el inconveniente de tardar más. El parámetro ‘-w’ indica la lista a partir de la cual se va a hacer el *fuzzing* y el parámetro ‘-u’ es para la URL de la página destino. Añadiendo la palabra *FUZZ* al final, indico que la palabra de la lista que analiza, la busque en esa posición de la URL.  
 
 <code>wfuzz -c --hc 404 -t 1 -w /usr/share/seclists/Discovery/Web-Content/raft-small-files.txt -u http://172.17.0.2/FUZZ</code>  
 
 ![427168994-9e23fdc9-fc67-41f4-8fb6-e99e683ececb](https://github.com/user-attachments/assets/f49331ae-24e6-4ffc-8009-b237acb12157)
 
-Kali contiene una serie de listas (diccionarios) con los nomber más típicos de archivos o directorios web, en la imagen se prueba con archivos. De entre los archivos devueltos, los alcanzables son ‘index.php’ y ‘index.html.bak’. Confirmando lo encontrado por la vía FTP.
+*Kali* contiene una serie de listas (diccionarios) con los nombres más típicos de archivos o directorios web, en la imagen se prueba con archivos. De entre los archivos devueltos, los alcanzables son ‘index.php’ y ‘index.html.bak’. Confirmando lo encontrado por la vía FTP.
 
 ### Vulnerabilidades explotadas
 Una vez hecha la enumeración, me dispongo a explotar la vulnerabilidad FTP encontrada, donde no se pide contraseña alguna para iniciar sesión con el usuario ‘anonymous’. Me dirijo al directorio /html y utilizo el comando ‘mget’ para descargar el ‘index.php’ que a efectos prácticos no es muy útil, contiene el mensaje que se muestra en la dirección IP de la máquina.  
