@@ -49,7 +49,7 @@ Para la enumeración web se utiliza la herramiente __WFUZZ__ que encontrará los
 *Kali* contiene una serie de listas (diccionarios) con los nombres más típicos de archivos o directorios web, en la imagen se prueba con archivos. De entre los archivos devueltos, los alcanzables son ‘index.php’ y ‘index.html.bak’. Confirmando lo encontrado por la vía FTP.
 
 ### Vulnerabilidades explotadas
-Una vez hecha la enumeración, me dispongo a explotar la vulnerabilidad FTP encontrada, donde no se pide contraseña alguna para iniciar sesión con el usuario ‘anonymous’. Me dirijo al directorio /html y utilizo el comando ‘mget’ para descargar el ‘index.php’ que a efectos prácticos no es muy útil, contiene el mensaje que se muestra en la dirección IP de la máquina.  
+Una vez hecha la enumeración, me dispongo a explotar la vulnerabilidad FTP encontrada, donde no se pide contraseña alguna para iniciar sesión con el usuario *anonymous*. Me dirijo al directorio '/html' y utilizo el comando <code>mget</code> para descargar el ‘index.php’ que a efectos prácticos no es muy útil, pues únicamente contiene el mensaje que se muestra en la dirección IP de la máquina.  
 
 ![427514869-9b0c3aca-39b1-482e-a5ad-2d04444f2e66](https://github.com/user-attachments/assets/321914e1-f60c-48dd-88ef-958f7eee6181)
 
@@ -57,43 +57,43 @@ Una vez hecha la enumeración, me dispongo a explotar la vulnerabilidad FTP enco
 <code>cd html</code>  
 <code>mget index.php</code>  
 
-Opto por subir vía FTP un archivo ‘php’ con el ataque y alojarlo en la misma carpeta /html donde se encuentran los otros archivos. El ataque consiste en una _reverse shell_ escrita en *php* obtenida de la plataforma de github, subida por [pentestmonkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php). Modifico la dirección IP en el código por la mía (10.0.2.15) y el puerto deseado (1234 por defecto), el resto lo dejo igual. Para subir este archivo, debo estar situado en el directorio donde lo tengo guardado ‘/home/kali’ y una vez conectado vía ftp, voy al directorio donde lo quiero guardar ‘/html’. El comando utilizado es ‘put’ seguido del nombre del archivo.  
+Opto por subir vía FTP un archivo *php* con el ataque y alojarlo en la misma carpeta '/html' donde se encuentran los otros archivos. El ataque consiste en una _reverse shell_ escrita en *php* obtenida de la plataforma de *github*, subida por [*pentestmonkey*](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php). Modifico la dirección IP en el código por la mía (10.0.2.15) y el puerto deseado (1234 por defecto), el resto lo dejo igual. Para subir este archivo, debo estar situado en el directorio donde lo tengo guardado (‘/home/kali’) y una vez conectado vía FTP, voy al directorio donde lo quiero guardar ‘/html’. El comando utilizado es <code>put</code> seguido del nombre del archivo.  
 
 <code>put php-reverse-shell.php</code>  
 
-Lo siguiente es, desde mi terminal, poner el puerto especificado en el script en escucha (1234). Para hacer esto hago uso de la herramienta **netcat**, le indico la opción de verbosidad y que busque direcciones IP numéricas.  
+Lo siguiente es, desde mi terminal, poner el puerto especificado en el *script* en escucha (1234). Para hacer esto hago uso de la herramienta **netcat**, le indico la opción de verbosidad y que busque direcciones IP numéricas.  
 
 <code>nc -lvnp 1234</code>  
 
-Por último, me dirijo a la dirección *url* del archivo (http://172.17.0.2/php-reverse-shell.php) y espero que se produzca la conexión. Al conectarnos, puedo ver qué usuario soy con un ‘whoami’ que me devuelve ‘www-data’. Además, se observa que pertenezco al grupo de mismo nombre, ‘www-data’. Este es el típico usuario que se obtiene al acceder vía web.
+Por último, me dirijo a la dirección URL del archivo (http://172.17.0.2/php-reverse-shell.php) y espero que se produzca la conexión. Al conectarme, puedo ver qué usuario soy con un <code>whoami</code> que me devuelve ‘www-data’. Además, se observa que pertenezco al grupo de mismo nombre, ‘www-data’. Este es el típico usuario que se obtiene al acceder vía web.
 
 ![427516314-1fedb1bb-98dc-42bc-8bf2-305f47898d5d](https://github.com/user-attachments/assets/0c79c87e-6701-4cd3-803f-a60e1ed377d6)
 
-Una vez dentro sólo debo buscarla *flag*, la cual encuentro en el directorio '/home/hacker/'.  
+Una vez dentro sólo debo buscar la *flag*, la cual encuentro en el directorio '/home/hacker/'.  
 **Flag**: 244cdf401e667cca77b8228066096985.  
 
 ![427518574-dbd4ffa4-ee6c-4fc1-bc14-0c9b12819537](https://github.com/user-attachments/assets/e4653076-ac0f-489b-9b16-4711d87d9005)
 
-Para conseguir la escalada de privilegios, me fijo en que antriormente he descubierto al existencia del usuario 'hacker'. Así pues, voy a buscar procesos lanzados por este usuario o que sea mencionado.  
+Para conseguir la escalada de privilegios, me fijo en que anteriormente he descubierto la existencia del usuario *hacker*. Así pues, voy a buscar procesos lanzados por este usuario (o en los que haya sido mencionado).  
 
 <code>ps aux | grep hacker</code>  
 
-Como respuesta, obtengo un proceso ejecutado por el usuario *root* en estado de espera, el cual consiste en un script llamado ‘myhacker.sh’ y al que parece que se le pasa una contraseña ‘tefeme_86_pass’.
-Intento **pivotar** al usuario hacker probando con esta contraseña y después de conseguirlo, lo compruebo mediante el comando ‘id’.
+Como respuesta, obtengo un proceso ejecutado por el usuario *root* en estado de espera, el cual consiste en un *script* llamado ‘myhacker.sh’ y al que parece que se le pasa una contraseña ‘tefeme_86_pass’.
+Intento **pivotar** al usuario *hacker* probando con esta contraseña y después de conseguirlo lo compruebo mediante el comando <code>id</code>.
 
 ![427528819-4a47603f-e039-4a50-9422-fbf93042874c](https://github.com/user-attachments/assets/ae914b8f-a229-4e4f-85ef-b9ae2b797ae6)
 
-El siguiente paso es buscar archivos, desde el directorio raíz, con el **bit SUID** activado que permitan ser ejecutados con permisos *root* (find / -perm -4000). Además, los mensajes erróneos que devuelva, los mandamos a la dirección '/dev/null' para que no se muestren por pantalla (2>/dev/null). Como respuesta aparecen una serie de binarios  de entre los cuales, me llama la atención '/usr/local/lib/sudo' pues no se encuentra en '/usr/bin', como cabría esperar.
+El siguiente paso es buscar archivos desde el directorio raíz con el **bit SUID** activado que permitan ser ejecutados con permisos *root* (find / -perm -4000). Además, los mensajes erróneos que devuelva, los mandamos a la dirección '/dev/null' para que no se muestren por pantalla (2>/dev/null). Como respuesta aparecen una serie de binarios, de entre los cuales me llama la atención '/usr/local/lib/sudo' pues no se encuentra en '/usr/bin', como cabría esperar.
 
 <code>find / -perm -4000 2>/dev/null</code>
 
-Haciendo una búsqueda por la web [exploit-database](https://www.exploit-db.com/exploits/47502), encuentro una vulnerabilidad que fue resuelta a partir de la versión 28. Para explotarla voy a abrir una shell con un usuario inexistente, indicándole el uid -1; lo cual devolverá un 0 y lo confundirá con el usuario *root*.
+Haciendo una búsqueda por la web [*exploit-database*](https://www.exploit-db.com/exploits/47502), encuentro una vulnerabilidad que fue resuelta a partir de la versión 28. Para explotarla voy a abrir una *shell* con un usuario inexistente, indicándole el *uid* -1; lo cual devolverá un 0 y lo confundirá con el usuario *root*.
 
 <code>sudo -u#-1 /bin/bash</code>
 
 ![427654438-64cc9af0-e429-4b07-84af-e68e1d1e62dd](https://github.com/user-attachments/assets/a8620f84-59cb-49f6-92e6-2f6f2be4a425)
 
-Una vez soy usuario *root*, puedo dirigirme a su directorio '/root' y encontrar la segunda *flag*.
+Una vez soy usuario *root*, puedo dirigirme a su directorio propio ('/root') y encontrar la segunda *flag*.
 
 ![427657084-6ec0d4b1-335f-4d86-9e8d-b4bb3f033649](https://github.com/user-attachments/assets/bc748004-0c88-4ce4-88a6-5a0b7fd45dcb)
 
