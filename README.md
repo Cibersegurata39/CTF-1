@@ -3,7 +3,7 @@ Capture the flag donde se trabaja la enumeración y fingerprinting, conexión FT
 
 ## Objetivo
 
-Explicar la realización del _Capture the flag_ siguiente dentro del mundo educativo. Se preteneden conseguir dos archivos (_flags_), uno dentro del entorno del usuario básico y el otro en el entorno _root_. Para ellos, se deberá penetrar en la máquina, pasar al usuario básico y realizar una escalada de privilegios.
+Explicar la realización del _Capture the flag_ siguiente dentro del mundo educativo. Se preteneden conseguir dos archivos (_flags_), uno dentro del entorno del usuario básico y el otro en el entorno _root_. Para ello, se deberá penetrar en la máquina, pasar al usuario básico y realizar una escalada de privilegios.
 
 ## Que hemos aprendido?
 
