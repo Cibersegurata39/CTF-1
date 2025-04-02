@@ -60,7 +60,7 @@ Para la enumeración web se utiliza la herramiente __WFUZZ__ que encontrará los
 ### Vulnerabilidades explotadas
 Una vez hecha la enumeración, me dispongo a explotar la vulnerabilidad FTP encontrada, donde no se pide contraseña alguna para iniciar sesión con el usuario *anonymous*. Me dirijo al directorio '/html' y utilizo el comando <code>mget</code> para descargar el ‘index.php’ que a efectos prácticos no es muy útil, pues únicamente contiene el mensaje que se muestra en la dirección IP de la máquina.  
 
-![427514869-9b0c3aca-39b1-482e-a5ad-2d04444f2e66](https://github.com/user-attachments/assets/321914e1-f60c-48dd-88ef-958f7eee6181)
+![image](https://github.com/user-attachments/assets/4faf7f88-613e-41ec-8ff6-5eda4ae6c6cc)
 
 <code>ftp 172.17.0.2</code>  
 <code>cd html</code>  
