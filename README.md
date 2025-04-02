@@ -2,6 +2,9 @@
 *Capture the flag* donde se trabaja la enumeración y fingerprinting, conexión FTP, php, *reverse shell*, *netcat*, escalada de privilegios... 
 <div>
   <img src="https://img.shields.io/badge/-Kali-5e8ca8?style=for-the-badge&logo=kalilinux&logoColor=white" />
+  <img src="https://img.shields.io/badge/-Nmap-6933FF?style=for-the-badge&logo=nmap&logoColor=white" />
+  <img src="https://img.shields.io/badge/-Wfuzz-4285F4?style=for-the-badge&logo=wfuzz&logoColor=white" />
+  <img src="https://img.shields.io/badge/-Netcat-F5455C?style=for-the-badge&logo=netcat&logoColor=white" />
   <img src="https://img.shields.io/badge/-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/-Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
   <img src="https://img.shields.io/badge/-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
