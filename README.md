@@ -1,7 +1,11 @@
 # CTF-1
 *Capture the flag* donde se trabaja la enumeración y fingerprinting, conexión FTP, php, *reverse shell*, *netcat*, escalada de privilegios... 
-
-<img src="https://img.shields.io/badge/-php-ad7ecf?&style=for-the-badge&logo=php&logoColor=white" />
+<div>
+  <img src="https://img.shields.io/badge/-Kali-5e8ca8?style=for-the-badge&logo=kalilinux&logoColor=white" />
+  <img src="https://img.shields.io/badge/-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" />
+  <img src="https://img.shields.io/badge/-Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" />
+  <img src="https://img.shields.io/badge/-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+</div>
 
 ## Objetivo
 
